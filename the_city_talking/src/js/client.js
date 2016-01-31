@@ -14,6 +14,12 @@ var chart = d3.select(".chart")
 
 var formatDate = d3.time.format("%d-%m-%Y");
 
+function type(d) {
+  d.date = formatDate.parse(d.date);
+  d.no2 = +d.no2;
+  return d;
+}
+
 var x = d3.time.scale()
 	.range([0,width]);
 
@@ -26,27 +32,40 @@ var line = d3.svg.line()
 
 function drawmonth(month)
 {
-	d3.json("json_centre/"+testmonth+".json",function(error,json){
+	d3.json("json_centre/"+month+".json",function(error,json){
+		if (error) throw error;
+		data = json.map(function(d){return {"Date":formatDate.parse(d.Date),"NO2":+d.NO2};});
+
+		x.domain(d3.extent(data, function(d) { return d.Date; }));
+		y.domain(d3.extent(data, function(d) { return d.NO2; }));
+
+		chart.append("path")
+			.datum(data)
+			.attr("d",line)
+			.attr("class","line");
+
+		chart.selectAll("text")
+			.data(data)
+			.enter().append("text")
+			.attr("x",function(d){return x(d.Date)+10;})
+			.attr("y",function(d){return y(d.NO2)-3;})
+			.text(function(d){return d.NO2;});
+
+		chart.selectAll("text")
+			.exit().remove();
 
 	});
-	d3.select("path").datum();
 }
 
-d3.json("json_centre/"+testmonth+".json",function(error,json){
-	if (error) throw error;
-	data.Date = json.map(function(d){return formatDate.parse(d.Date)});
-	data.NO2 = json.map(function(d){return +d.NO2});
 
-	console.log(data);
 
-	x.domain(d3.extent(data, function(d) { return d.Date; }));
-	y.domain(d3.extent(data, function(d) { return d.NO2; }));
-
-	chart.append("path")
-		.datum(data)
-		.attr("d",line)
-		.attr("class","lineb")
-		.transition()
-		.delay(500)
-		.attr("class","line");
-});
+setTimeout(function()
+{
+	drawmonth("04-2013");
+},500);
+/*
+setTimeout(function()
+{
+	drawmonth("08-2015");
+},2000);
+*/

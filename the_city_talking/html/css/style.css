@@ -14,3 +14,9 @@ footer p
   fill: none;
   stroke-width: 0.5px;
 }
+
+.chart text {
+  fill: black;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
