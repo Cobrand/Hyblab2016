@@ -115,7 +115,7 @@ app.get('/json_kerbside/:json',(req,res) => {
 	}else{
 		let month = result[1] ;
 		fs.readFile(path.join(__dirname,'data/HeadingleyKerbside_all_years.csv'),'utf8',(err,data) => {
-			processData(err,data,(e) => res.json(e),false,(obj) => obj.date.format("MM-YYYY") == result[1]);
+			processData(err,data,(e) => res.json(e),true,(obj) => obj.date.format("MM-YYYY") == result[1]);
 		});
 	}
 })

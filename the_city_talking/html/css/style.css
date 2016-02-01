@@ -6,7 +6,7 @@ footer p
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: url(#line-gradient);
   stroke-width: 2px;
 }
 
